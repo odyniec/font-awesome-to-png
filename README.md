@@ -40,3 +40,28 @@ Export the asterisk icon as 32x32 pixels image, in blue:
 Export all icons as 16x16 pixels images:
 
     font-awesome-to-png.py ALL
+    
+Export all icons as 24x24 pixels images, in gray (note HTML colors must be in quotes):
+
+    font-awesome-to-png.py --size 24 --color "#666666" ALL
+
+### System Requirements
+
+* Python must be installed
+* The Python PIL package is required and must be compiled with support for libfreetype
+* The file font-awesome-webfont.ttf should exist in the same directory as font-awesome-to-png.py
+
+### Troublshooting
+
+The error "ImportError: No module named Image" indicates that PIL is not installed
+
+	sudo pip install PIL
+
+The error "ImportError: The _imagingft C module is not installed" indicates libfreetype is not installed or was not properly linked when PIL was installed
+
+	sudo pip uninstall PIL
+	ln -s /usr/X11/include/freetype2 /usr/local/include/
+	ln -s /usr/X11/include/ft2build.h /usr/local/include/
+	ln -s /usr/X11/lib/libfreetype.6.dylib /usr/local/lib/
+	ln -s /usr/X11/lib/libfreetype.6.dylib /usr/local/lib/libfreetype.dylib
+	sudo pip install PIL
