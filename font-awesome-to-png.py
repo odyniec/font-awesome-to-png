@@ -319,16 +319,16 @@ def export_icon(icon, size, filename, font, color):
     if bbox:
         image = image.crop(bbox)
 
-    borderw = int((size - (bbox[2] - bbox[0])) / 2)
-    borderh = int((size - (bbox[3] - bbox[1])) / 2)
+        borderw = int((size - (bbox[2] - bbox[0])) / 2)
+        borderh = int((size - (bbox[3] - bbox[1])) / 2)
 
-    # Create background image
-    bg = Image.new("RGBA", (size, size), (0,0,0,0))
+        # Create background image
+        bg = Image.new("RGBA", (size, size), (0,0,0,0))
 
-    bg.paste(image, (borderw,borderh))
+        bg.paste(image, (borderw,borderh))
 
-    # Save file
-    bg.save(filename)
+        # Save file
+        bg.save(filename)
 
 parser = argparse.ArgumentParser(
         description="Exports Font Awesome icons as PNG images.")
