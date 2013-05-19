@@ -299,8 +299,8 @@ class ListAction(argparse.Action):
             print(icon)
         exit(0)
 
-def export_icon(icon, size, filename, font, color):
-    image = Image.new("RGBA", (size, size), color=(0,0,0,0))
+def export_icon(icon, size, filename, font, color, bgcolor):
+    image = Image.new("RGBA", (size, size), color=(0,0,0,0) if bgcolor == "transparent" else bgcolor)
 
     draw = ImageDraw.Draw(image)
 
@@ -337,6 +337,8 @@ parser.add_argument("icon", type=str, nargs="+",
         help="The name(s) of the icon(s) to export (or \"ALL\" for all icons)")
 parser.add_argument("--color", type=str, default="black",
         help="Color (HTML color code or name, default: black)")
+parser.add_argument("--bgcolor", type=str, default="transparent",
+                    help="Background color (HTML color code or name, default: transparent)")
 parser.add_argument("--filename", type=str,
         help="The name of the output file (it must end with \".png\"). If " +
         "all files are exported, it is used as a prefix.")
@@ -352,6 +354,7 @@ icon = args.icon
 size = args.size
 font = args.font
 color = args.color
+bgcolor = args.bgcolor
 
 if args.font:
     if not path.isfile(args.font) or not access(args.font, R_OK):
@@ -391,5 +394,5 @@ for icon in selected_icons:
     print("Exporting icon \"%s\" as %s (%ix%i pixels)" %
             (icon, filename, size, size))
 
-    export_icon(icon, size, filename, font, color)
+    export_icon(icon, size, filename, font, color, bgcolor)
 
