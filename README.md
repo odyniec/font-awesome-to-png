@@ -37,6 +37,10 @@ Export the asterisk icon as 32x32 pixels image, in blue:
 
     font-awesome-to-png.py --size 32 --color blue asterisk
 
+Export the search icon as 16x16 pixels image with red background:
+
+    font-awesome-to-png.py --bgcolor red search
+
 Export all icons as 16x16 pixels images:
 
     font-awesome-to-png.py ALL
