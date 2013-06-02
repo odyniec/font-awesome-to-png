@@ -288,7 +288,7 @@ icons = {
     "spinner": u("\uf110"),
     "circle": u("\uf111"),
     "reply": u("\uf112"),
-    "github-alt": u("\uf113"),
+    # "github-alt": u("\uf113"),
     "folder-close-alt": u("\uf114"),
     "folder-open-alt": u("\uf115"),
     
@@ -405,12 +405,15 @@ parser.add_argument("--list", nargs=0, action=ListAction,
         help="List available icon names and exit")
 parser.add_argument("--size", type=int, default=16,
         help="Icon size in pixels (default: 16)")
+parser.add_argument('--retina', action='store_true',
+        help="Append @2x to the end of names")
 
 args = parser.parse_args()
 icon = args.icon
 size = args.size
 font = args.font
 color = args.color
+retina = args.retina
 
 if args.font:
     if not path.isfile(args.font) or not access(args.font, R_OK):
@@ -437,15 +440,20 @@ else:
             sys.exit(1)
 
 for icon in selected_icons:
+    if retina:
+        tail = "@2x.png"
+    else:
+        tail = ".png"
+        
     if len(selected_icons) > 1:
         # Exporting multiple icons -- treat the filename option as name prefix
-        filename = (args.filename or "") + icon + ".png"
+        filename = (args.filename or "") + icon + tail
     else:
         # Exporting one icon
         if args.filename:
             filename = args.filename
         else:
-            filename = icon + ".png"
+            filename = icon + tail
 
     print("Exporting icon \"%s\" as %s (%ix%i pixels)" %
             (icon, filename, size, size))
