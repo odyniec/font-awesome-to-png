@@ -412,18 +412,14 @@ class ListAction(argparse.Action):
         exit(0)
 
 def export_icon(icon, size, filename, font, color):
-    image = Image.new("RGBA", (size, size), color=(0,0,0,0))
+    image = Image.new("RGBA", (size * 2, size * 2), color=(0,0,0,0))
 
     draw = ImageDraw.Draw(image)
 
     # Initialize font
     font = ImageFont.truetype(font, size)
 
-    # Determine the dimensions of the icon
-    width,height = draw.textsize(icons[icon], font=font)
-
-    draw.text(((size - width) / 2, (size - height) / 2), icons[icon],
-            font=font, fill=color)
+    draw.text((0, 0), icons[icon], font=font, fill=color)
 
     # Get bounding box
     bbox = image.getbbox()
@@ -431,13 +427,17 @@ def export_icon(icon, size, filename, font, color):
     if bbox:
         image = image.crop(bbox)
 
-    borderw = int((size - (bbox[2] - bbox[0])) / 2)
-    borderh = int((size - (bbox[3] - bbox[1])) / 2)
+    bg_size = max(image.size[0], image.size[1], size)
+    borderw = int((bg_size - image.size[0]) / 2)
+    borderh = int((bg_size - image.size[1]) / 2)
 
     # Create background image
-    bg = Image.new("RGBA", (size, size), (0,0,0,0))
+    bg = Image.new("RGBA", (bg_size, bg_size), color=(0,0,0,0))
 
     bg.paste(image, (borderw,borderh))
+
+    if bg_size > size:
+        bg = bg.resize((size, size))
 
     # Save file
     bg.save(filename)
