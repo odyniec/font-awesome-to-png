@@ -111,6 +111,8 @@ icons = {
     "code": u("\uf121"),
     "code-fork": u("\uf126"),
     "coffee": u("\uf0f4"),
+    "cog": u("\uf013"),
+    "cogs": u("\uf085"),
     "columns": u("\uf0db"),
     "comment": u("\uf075"),
     "comment-o": u("\uf0e5"),
