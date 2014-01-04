@@ -361,6 +361,7 @@ icons = {
 }
 
 
+
 class ListAction(argparse.Action):
     def __call__(self, parser, namespace, values, option_string=None):
         for icon in sorted(icons.keys()):
