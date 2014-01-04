@@ -429,7 +429,9 @@ class LoadCSSAction(argparse.Action):
                 name = match.groups()[0]
                 for declaration in rule.declarations:
                     if declaration.name == u("content"):
-                        new_icons[name] = declaration.value.as_css()
+                        val = declaration.value.as_css()
+                        val = re.sub(r'"\\([a-zA-Z_0-9]+)"', r'\u\1', val)
+                        new_icons[name] = u(val)
         return new_icons
 
 
