@@ -383,10 +383,13 @@ def export_icon(icon, size, filename, font, color):
     draw = ImageDraw.Draw(image)
 
     # Initialize font
-    font = ImageFont.truetype(font, size)
+    font = ImageFont.truetype(font, int(0.8725*size))
 
     # Determine the dimensions of the icon
     width,height = draw.textsize(icons[icon], font=font)
+
+    if width>size or height>size:
+        print "{name}: too large width={w} height={h}".format(name=icon, w=width, h=height)
 
     draw.text(((size - width) / 2, (size - height) / 2), icons[icon],
             font=font, fill=color)
