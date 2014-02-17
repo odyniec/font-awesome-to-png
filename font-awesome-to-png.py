@@ -420,15 +420,18 @@ class LoadCSSAction(argparse.Action):
         new_icons = {}
         parser = tinycss.make_parser("page3")
         stylesheet = parser.parse_stylesheet_file(filename)
-        is_icon = re.compile(u("^\.fa-(.*):before$"))
+        is_icon = re.compile(u("\.fa-(.*):before(?:,$\n^\.fa-(.*):before)?"), re.MULTILINE)
         for rule in stylesheet.rules:
             selector = rule.selector.as_css()
             match = is_icon.match(selector)
             if match:
-                name = match.groups()[0]
-                for declaration in rule.declarations:
-                    if declaration.name == u("content"):
-                        new_icons[name] = declaration.value.as_css()
+                for name in match.groups():
+                    if name:
+                        for declaration in rule.declarations:
+                            if declaration.name == u("content"):
+                                val = declaration.value.as_css()
+                                val = re.sub(r'"\\([a-zA-Z_0-9]+)"', r'\u\1', val)
+                                new_icons[name] = u(val)
         return new_icons
 
 
