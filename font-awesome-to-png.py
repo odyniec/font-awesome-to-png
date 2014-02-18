@@ -449,6 +449,9 @@ if __name__ == '__main__':
     parser.add_argument("--filename", type=str,
             help="The name of the output file (it must end with \".png\"). If " +
             "all files are exported, it is used as a prefix.")
+    parser.add_argument("--infix", type=str, default="",
+            help="Extra string inserted in filename, after the icon name and before the .png extension " +
+            "when exporting multiple icons.")
     parser.add_argument("--font", type=str, default="fontawesome-webfont.ttf",
             help="Font file to use (default: fontawesome-webfont.ttf)")
     parser.add_argument("--css", type=str, default="", action=LoadCSSAction,
@@ -494,7 +497,7 @@ if __name__ == '__main__':
     for icon in selected_icons:
         if len(selected_icons) > 1:
             # Exporting multiple icons -- treat the filename option as name prefix
-            filename = (args.filename or "") + icon + ".png"
+            filename = (args.filename or "") + icon + args.infix + ".png"
         else:
             # Exporting one icon
             if args.filename:
