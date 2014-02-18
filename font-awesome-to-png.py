@@ -383,10 +383,13 @@ def export_icon(icon, size, filename, font, color):
     draw = ImageDraw.Draw(image)
 
     # Initialize font
-    font = ImageFont.truetype(font, size)
+    font = ImageFont.truetype(font, int(0.8725*size))
 
     # Determine the dimensions of the icon
     width,height = draw.textsize(icons[icon], font=font)
+
+    if width>size or height>size:
+        print "{name}: too large width={w} height={h}".format(name=icon, w=width, h=height)
 
     draw.text(((size - width) / 2, (size - height) / 2), icons[icon],
             font=font, fill=color)
@@ -420,15 +423,18 @@ class LoadCSSAction(argparse.Action):
         new_icons = {}
         parser = tinycss.make_parser("page3")
         stylesheet = parser.parse_stylesheet_file(filename)
-        is_icon = re.compile(u("^\.fa-(.*):before$"))
+        is_icon = re.compile(u("\.fa-(.*):before(?:,$\n^\.fa-(.*):before)?"), re.MULTILINE)
         for rule in stylesheet.rules:
             selector = rule.selector.as_css()
             match = is_icon.match(selector)
             if match:
-                name = match.groups()[0]
-                for declaration in rule.declarations:
-                    if declaration.name == u("content"):
-                        new_icons[name] = declaration.value.as_css()
+                for name in match.groups():
+                    if name:
+                        for declaration in rule.declarations:
+                            if declaration.name == u("content"):
+                                val = declaration.value.as_css()
+                                val = re.sub(r'"\\([a-zA-Z_0-9]+)"', r'\u\1', val)
+                                new_icons[name] = u(val)
         return new_icons
 
 
@@ -443,6 +449,9 @@ if __name__ == '__main__':
     parser.add_argument("--filename", type=str,
             help="The name of the output file (it must end with \".png\"). If " +
             "all files are exported, it is used as a prefix.")
+    parser.add_argument("--infix", type=str, default="",
+            help="Extra string inserted in filename, after the icon name and before the .png extension " +
+            "when exporting multiple icons.")
     parser.add_argument("--font", type=str, default="fontawesome-webfont.ttf",
             help="Font file to use (default: fontawesome-webfont.ttf)")
     parser.add_argument("--css", type=str, default="", action=LoadCSSAction,
@@ -488,7 +497,7 @@ if __name__ == '__main__':
     for icon in selected_icons:
         if len(selected_icons) > 1:
             # Exporting multiple icons -- treat the filename option as name prefix
-            filename = (args.filename or "") + icon + ".png"
+            filename = (args.filename or "") + icon + args.infix + ".png"
         else:
             # Exporting one icon
             if args.filename:
