@@ -46,6 +46,10 @@ Export the asterisk icon as 32x32 pixels image, in blue:
 
     font-awesome-to-png.py --size 32 --color blue asterisk
 
+Export the repeat icon as 16x16 pixel image, specifying a HTML color code:
+
+    font-awesome-to-png.py --color "#FABFAB" repeat
+
 Export all icons as 16x16 pixels images:
 
     font-awesome-to-png.py ALL
