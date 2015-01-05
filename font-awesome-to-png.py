@@ -10,13 +10,17 @@
 # Font Awesome - http://fortawesome.github.com/Font-Awesome
 #
 
-import sys, argparse, re
+import sys
+import argparse
+import re
 from os import path, access, R_OK
 from PIL import Image, ImageFont, ImageDraw
+
 
 # Support Unicode literals with both Python 2 and 3
 if sys.version < '3':
     import codecs
+
     def u(x):
         return codecs.unicode_escape_decode(x)[0]
 
@@ -554,7 +558,7 @@ class ListUpdateAction(argparse.Action):
 
 
 def export_icon(icon, size, filename, font, color):
-    image = Image.new("RGBA", (size, size), color=(0,0,0,0))
+    image = Image.new("RGBA", (size, size), color=(0, 0, 0, 0))
 
     draw = ImageDraw.Draw(image)
 
@@ -562,38 +566,36 @@ def export_icon(icon, size, filename, font, color):
     font = ImageFont.truetype(font, size)
 
     # Determine the dimensions of the icon
-    width,height = draw.textsize(icons[icon], font=font)
+    width, height = draw.textsize(icons[icon], font=font)
 
-    draw.text(((size - width) / 2, (size - height) / 2), icons[icon],
-            font=font, fill=color)
+    draw.text(((size - width) / 2, (size - height) / 2), icons[icon], font=font, fill=color)
 
     # Get bounding box
     bbox = image.getbbox()
 
     # Create an alpha mask
-    imagemask = Image.new("L", (size, size), 0)
-    drawmask = ImageDraw.Draw(imagemask)
+    image_mask = Image.new("L", (size, size), 0)
+    draw_mask = ImageDraw.Draw(image_mask)
 
     # Draw the icon on the mask
-    drawmask.text(((size - width) / 2, (size - height) / 2), icons[icon],
-        font=font, fill=255)
+    draw_mask.text(((size - width) / 2, (size - height) / 2), icons[icon], font=font, fill=255)
 
     # Create a solid color image and apply the mask
-    iconimage = Image.new("RGBA", (size,size), color)
-    iconimage.putalpha(imagemask)
+    icon_image = Image.new("RGBA", (size, size), color)
+    icon_image.putalpha(image_mask)
 
     if bbox:
-        iconimage = iconimage.crop(bbox)
+        icon_image = icon_image.crop(bbox)
 
-    borderw = int((size - (bbox[2] - bbox[0])) / 2)
-    borderh = int((size - (bbox[3] - bbox[1])) / 2)
+    border_w = int((size - (bbox[2] - bbox[0])) / 2)
+    border_h = int((size - (bbox[3] - bbox[1])) / 2)
 
     # Create output image
-    outimage = Image.new("RGBA", (size, size), (0,0,0,0))
-    outimage.paste(iconimage, (borderw,borderh))
+    out_image = Image.new("RGBA", (size, size), (0, 0, 0, 0))
+    out_image.paste(icon_image, (border_w, border_h))
 
     # Save file
-    outimage.save(filename)
+    out_image.save(filename)
 
 
 class LoadCSSAction(argparse.Action):
@@ -604,6 +606,7 @@ class LoadCSSAction(argparse.Action):
     @staticmethod
     def _load_css(filename):
         import tinycss
+
         new_icons = {}
         parser = tinycss.make_parser("page3")
 
@@ -611,7 +614,7 @@ class LoadCSSAction(argparse.Action):
             stylesheet = parser.parse_stylesheet_file(filename)
         except IOError:
             print >> sys.stderr, ("Error: CSS file (%s) can't be opened"
-                % (filename))
+                                  % (filename))
             exit(1)
 
         is_icon = re.compile(u("\.fa-(.*):before,?"))
@@ -630,26 +633,26 @@ class LoadCSSAction(argparse.Action):
 
 if __name__ == '__main__':
     parser = argparse.ArgumentParser(
-            description="Exports Font Awesome icons as PNG images.")
+        description="Exports Font Awesome icons as PNG images.")
 
     parser.add_argument("icon", type=str, nargs="+",
-            help="The name(s) of the icon(s) to export (or \"ALL\" for all icons)")
+                        help="The name(s) of the icon(s) to export (or \"ALL\" for all icons)")
     parser.add_argument("--color", type=str, default="black",
-            help="Color (HTML color code or name, default: black)")
+                        help="Color (HTML color code or name, default: black)")
     parser.add_argument("--filename", type=str,
-            help="The name of the output file (it must end with \".png\"). If " +
-            "all files are exported, it is used as a prefix.")
+                        help="The name of the output file (it must end with \".png\"). If " +
+                             "all files are exported, it is used as a prefix.")
     parser.add_argument("--font", type=str, default="fontawesome-webfont.ttf",
-            help="Font file to use (default: fontawesome-webfont.ttf)")
+                        help="Font file to use (default: fontawesome-webfont.ttf)")
     parser.add_argument("--css", type=str, default="", action=LoadCSSAction,
-            help="Path to the CSS file defining icon names (instead of the " +
-            "predefined list)")
+                        help="Path to the CSS file defining icon names (instead of the " +
+                             "predefined list)")
     parser.add_argument("--list", nargs=0, action=ListAction,
-            help="List available icon names and exit")
+                        help="List available icon names and exit")
     parser.add_argument("--list-update", nargs=0, action=ListUpdateAction,
-            help=argparse.SUPPRESS)
+                        help=argparse.SUPPRESS)
     parser.add_argument("--size", type=int, default=16,
-            help="Icon size in pixels (default: 16)")
+                        help="Icon size in pixels (default: 16)")
 
     args = parser.parse_args()
     icon = args.icon
@@ -659,11 +662,10 @@ if __name__ == '__main__':
 
     if args.font:
         if not path.isfile(args.font) or not access(args.font, R_OK):
-            print >> sys.stderr, ("Error: Font file (%s) can't be opened"
-                    % (args.font))
+            print >> sys.stderr, ("Error: Font file (%s) can't be opened" % (args.font))
             exit(1)
 
-    if args.icon == [ "ALL" ]:
+    if args.icon == ["ALL"]:
         # Export all icons
         selected_icons = sorted(icons.keys())
     else:
@@ -692,7 +694,6 @@ if __name__ == '__main__':
             else:
                 filename = icon + ".png"
 
-        print("Exporting icon \"%s\" as %s (%ix%i pixels)" %
-                (icon, filename, size, size))
+        print("Exporting icon \"%s\" as %s (%ix%i pixels)" % (icon, filename, size, size))
 
         export_icon(icon, size, filename, font, color)
