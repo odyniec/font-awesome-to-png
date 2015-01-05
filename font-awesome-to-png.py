@@ -14,7 +14,7 @@ import sys
 import argparse
 import re
 from os import path, access, R_OK
-from PIL import Image, ImageFont, ImageDraw
+from PIL import Image, ImageFont, ImageDraw, ImageOps
 
 
 # Support Unicode literals with both Python 2 and 3
@@ -557,7 +557,7 @@ class ListUpdateAction(argparse.Action):
         exit(0)
 
 
-def export_icon(icon, size, filename, font, color):
+def export_icon(icon, size, filename, font, color, invert):
     image = Image.new("RGBA", (size, size), color=(0, 0, 0, 0))
 
     draw = ImageDraw.Draw(image)
@@ -582,7 +582,7 @@ def export_icon(icon, size, filename, font, color):
 
     # Create a solid color image and apply the mask
     icon_image = Image.new("RGBA", (size, size), color)
-    icon_image.putalpha(image_mask)
+    icon_image.putalpha(ImageOps.invert(image_mask) if invert else image_mask)
 
     if bbox:
         icon_image = icon_image.crop(bbox)
@@ -591,7 +591,7 @@ def export_icon(icon, size, filename, font, color):
     border_h = int((size - (bbox[3] - bbox[1])) / 2)
 
     # Create output image
-    out_image = Image.new("RGBA", (size, size), (0, 0, 0, 0))
+    out_image = Image.new("RGBA", (size, size), color if invert else (0, 0, 0, 0))
     out_image.paste(icon_image, (border_w, border_h))
 
     # Save file
@@ -639,6 +639,8 @@ if __name__ == '__main__':
                         help="The name(s) of the icon(s) to export (or \"ALL\" for all icons)")
     parser.add_argument("--color", type=str, default="black",
                         help="Color (HTML color code or name, default: black)")
+    parser.add_argument("--invert", action='store_true',
+                        help="The icon becomes transparent and the color becomes the background surrounding the icon")
     parser.add_argument("--filename", type=str,
                         help="The name of the output file (it must end with \".png\"). If " +
                              "all files are exported, it is used as a prefix.")
@@ -659,6 +661,7 @@ if __name__ == '__main__':
     size = args.size
     font = args.font
     color = args.color
+    invert = args.invert
 
     if args.font:
         if not path.isfile(args.font) or not access(args.font, R_OK):
@@ -696,4 +699,4 @@ if __name__ == '__main__':
 
         print("Exporting icon \"%s\" as %s (%ix%i pixels)" % (icon, filename, size, size))
 
-        export_icon(icon, size, filename, font, color)
+        export_icon(icon, size, filename, font, color, invert)
