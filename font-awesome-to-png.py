@@ -554,7 +554,7 @@ class ListUpdateAction(argparse.Action):
 
 
 def export_icon(icon, size, filename, font, color):
-    image = Image.new("RGBA", (size*2, size*2), color=(0,0,0,0))
+    image = Image.new("RGBA", (size, size), color=(0,0,0,0))
 
     draw = ImageDraw.Draw(image)
 
