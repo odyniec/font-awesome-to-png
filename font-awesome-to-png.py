@@ -599,10 +599,10 @@ def export_icon(icon, size, filename, font, color):
 class LoadCSSAction(argparse.Action):
     def __call__(self, parser, namespace, values, option_string=None):
         global icons
-        icons = LoadCSSAction._load_css(values)
+        icons = LoadCSSAction._load_css(values, namespace.prefix)
 
     @staticmethod
-    def _load_css(filename):
+    def _load_css(filename, prefix):
         import tinycss
         new_icons = {}
         parser = tinycss.make_parser("page3")
@@ -614,7 +614,7 @@ class LoadCSSAction(argparse.Action):
                 % (filename))
             exit(1)
 
-        is_icon = re.compile(u("\.fa-(.*):before,?"))
+        is_icon = re.compile(u("\." + prefix + "(.*):before,?"))
         for rule in stylesheet.rules:
             selector = rule.selector.as_css()
             for match in is_icon.finditer(selector):
@@ -641,6 +641,7 @@ if __name__ == '__main__':
             "all files are exported, it is used as a prefix.")
     parser.add_argument("--font", type=str, default="fontawesome-webfont.ttf",
             help="Font file to use (default: fontawesome-webfont.ttf)")
+    parser.add_argument("--prefix", type=str, default="fa-", help="CSS prefix")
     parser.add_argument("--css", type=str, default="", action=LoadCSSAction,
             help="Path to the CSS file defining icon names (instead of the " +
             "predefined list)")
@@ -652,6 +653,7 @@ if __name__ == '__main__':
             help="Icon size in pixels (default: 16)")
 
     args = parser.parse_args()
+    prefix = args.prefix
     icon = args.icon
     size = args.size
     font = args.font
