@@ -13,24 +13,9 @@
 import sys, argparse, re
 from os import path, access, R_OK
 from PIL import Image, ImageFont, ImageDraw
-
+from uchr import u, uchr
 # Mapping of icon names to character codes
 from icons import icons
-
-# Support Unicode literals with both Python 2 and 3
-if sys.version < '3':
-    import codecs
-    def u(x):
-        return codecs.unicode_escape_decode(x)[0]
-
-    def uchr(x):
-        return unichr(x)
-else:
-    def u(x):
-        return x
-
-    def uchr(x):
-        return chr(x)
 
 class ListAction(argparse.Action):
     def __call__(self, parser, namespace, values, option_string=None):
