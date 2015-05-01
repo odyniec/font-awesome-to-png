@@ -18,6 +18,7 @@ from os import path, access, R_OK
 from PIL import Image, ImageFont, ImageDraw
 from uchr import u, uchr
 from export_icon import export_icon
+from export_iconmap import export_iconmap
 # Mapping of icon names to character codes
 from icons import icons
 
@@ -39,33 +40,7 @@ class ListUpdateAction(argparse.Action):
 class LoadCSSAction(argparse.Action):
     def __call__(self, parser, namespace, values, option_string=None):
         global icons
-        icons = LoadCSSAction._load_css(values, namespace.prefix)
-
-    @staticmethod
-    def _load_css(filename, prefix):
-        import tinycss
-        new_icons = {}
-        parser = tinycss.make_parser("page3")
-
-        try:
-            stylesheet = parser.parse_stylesheet_file(filename)
-        except IOError:
-            print >> sys.stderr, ("Error: CSS file (%s) can't be opened"
-                % (filename))
-            exit(1)
-
-        is_icon = re.compile(u("\." + prefix + "(.*):before,?"))
-        for rule in stylesheet.rules:
-            selector = rule.selector.as_css()
-            for match in is_icon.finditer(selector):
-                name = match.groups()[0]
-                for declaration in rule.declarations:
-                    if declaration.name == u"content":
-                        val = declaration.value.as_css()
-                        if val.startswith('"') and val.endswith('"'):
-                            val = val[1:-1]
-                        new_icons[name] = uchr(int(val[1:], 16))
-        return new_icons
+        icons = export_iconmap(values, namespace.prefix)
 
 parser = argparse.ArgumentParser(
         description="Exports Font Awesome icons as PNG images.")
