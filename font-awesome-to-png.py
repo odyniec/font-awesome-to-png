@@ -13,9 +13,8 @@
 if __name__ != '__main__':
     exit(0);
 
-import sys, argparse, re
+import sys, argparse
 from os import path, access, R_OK
-from PIL import Image, ImageFont, ImageDraw
 from uchr import u, uchr
 from export_icon import export_icon
 from export_iconmap import export_iconmap
@@ -110,4 +109,4 @@ for icon in selected_icons:
     print("Exporting icon \"%s\" as %s (%ix%i pixels)" %
             (icon, filename, size, size))
 
-    export_icon(icon, size, filename, font, color)
+    export_icon(icons, icon, size, filename, font, color)

@@ -1,5 +1,7 @@
+import tinycss, re
+from uchr import u, uchr
+
 def export_iconmap(filename, prefix):
-    import tinycss
     new_icons = {}
     parser = tinycss.make_parser("page3")
 

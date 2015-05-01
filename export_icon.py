@@ -1,4 +1,6 @@
-def export_icon(icon, size, filename, font, color):
+from PIL import Image, ImageFont, ImageDraw
+
+def export_icon(icons, icon, size, filename, font, color):
     image = Image.new("RGBA", (size, size), color=(0,0,0,0))
 
     draw = ImageDraw.Draw(image)
