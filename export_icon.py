@@ -1,12 +1,24 @@
 from PIL import Image, ImageFont, ImageDraw
 
-def export_icon(icons, icon, size, filename, font, color):
+def export_icon(icons, icon, size, filename, fontname, color):
+    # Initialize font
+    fontsize = size
+    font = ImageFont.truetype(fontname, fontsize)
+
     image = Image.new("RGBA", (size, size), color=(0,0,0,0))
 
     draw = ImageDraw.Draw(image)
 
-    # Initialize font
-    font = ImageFont.truetype(font, size)
+    # Determine the dimensions of the icon
+    width,height = draw.textsize(icons[icon], font=font)
+
+    fontsize = int(float(size) / float(max(width, height)) * size)
+
+    font = ImageFont.truetype(fontname, fontsize)
+
+    image = Image.new("RGBA", (size, size), color=(0,0,0,0))
+
+    draw = ImageDraw.Draw(image)
 
     # Determine the dimensions of the icon
     width,height = draw.textsize(icons[icon], font=font)
