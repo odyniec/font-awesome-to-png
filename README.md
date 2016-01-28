@@ -1,4 +1,4 @@
-# New version avalible!
+# New version available!
 This project is now deprecated in favor of the new, restructured and more universal version of the script located [here](https://github.com/Pythonity/icon-font-to-png). I encourage to give it a spin, as it tries to fix all of the problems (icons being cut off, old font version, etc.), and is being actively maintained.
 
 ---
