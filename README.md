@@ -9,8 +9,14 @@ Font Awesome to PNG
 ===================
 
 This program allows you to extract the awesome
-[Font Awesome] (http://fortawesome.github.com/Font-Awesome/) icons as PNG images
+[Font Awesome] (http://fortawesome.github.com/Font-Awesome/) or any other iconfont icons as PNG images
 of specified size.
+
+### Setup
+
+```bash
+pip install image tinycss
+```
 
 ### Usage
 
