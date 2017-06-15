@@ -14,19 +14,21 @@ of specified size.
 
 ### Usage
 
-    font-awesome-to-png.py [-h] [--color COLOR] [--filename FILENAME]
-                           [--font FONT] [--css CSS] [--list] [--size SIZE]
-                           icon [icon ...]
-
+    font-awesome-to-png.py [-h] [--color COLOR] [--invert]
+                                  [--filename FILENAME] [--font FONT] [--css CSS]
+                                  [--list] [--size SIZE]
+                                  icon [icon ...]
+        
     positional arguments:
-      icon                 The name(s) of the icon(s) to export (or "ALL" for
-                           all icons)
-
+      icon                 The name(s) of the icon(s) to export (or "ALL" for all
+                           icons)
+    
     optional arguments:
       --color COLOR        Color (HTML color code or name, default: black)
-      --filename FILENAME  The name of the output file (it must end with
-                           ".png"). If all files are exported, it is used as a
-                           prefix.
+      --invert             The icon becomes transparent and the color becomes the
+                           background surrounding the icon
+      --filename FILENAME  The name of the output file (it must end with ".png").
+                           If all files are exported, it is used as a prefix.
       --font FONT          Font file to use (default: fontawesome-webfont.ttf)
       --css CSS            Path to the CSS file defining icon names (instead of
                            the predefined list)
