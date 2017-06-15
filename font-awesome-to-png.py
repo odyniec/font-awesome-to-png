@@ -559,7 +559,7 @@ def export_icon(icon, size, filename, font, color):
     draw = ImageDraw.Draw(image)
 
     # Initialize font
-    font = ImageFont.truetype(font, size)
+    font = ImageFont.truetype(font, int(size*.9))
 
     # Determine the dimensions of the icon
     width,height = draw.textsize(icons[icon], font=font)
